@@ -22,23 +22,7 @@ def get_weather(): # 오늘의 날씨 웹크롤링하는 함수
 
     return weather
 
-def get_video_embed_url(weather): # 오늘의 날씨로 노래 추천해주는 함수
-    try:
-        driver.get(f'https://www.youtube.com/results?search_query={weather}날 듣기 좋은 노래')
-        first_video = driver.find_element(By.CSS_SELECTOR, "a#thumbnail")  # <a> 태그 선택
-        video_url = first_video.get_attribute("href")  # href 속성에서 URL 가져오기
-        print(video_url)
-        video_id = video_url.split("v=")[-1].split("&")[0]  # v= 뒤의 ID 추출
-        embed_url = f"https://www.youtube.com/embed/{video_id}"  # 임베드 URL 생성
-    except:
-        embed_url = None
-    finally:
-        driver.quit()
-
-    return embed_url
-
 weather = get_weather()
-embed_url = get_video_embed_url(weather)
 
 @app.get("/", response_class=HTMLResponse)
 def main():
@@ -52,8 +36,6 @@ def main():
         <body>
             <h1>오늘의 날씨로 노래를 추천해줄게요!</h1>
             <p>오늘의 날씨: {weather}</p>
-            <h2>추천 노래:</h2>
-            <iframe width='560' height='315' src="{embed_url}" frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>
         </body>
     </html>
     """
